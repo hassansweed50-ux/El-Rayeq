@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرايق</title>
+    <meta name="description" content="احجز غرفتك في الرايق بلايستيشن كافيه - أفضل تجربة لعب ليلاً">
+
+    <!-- Google Fonts: Cairo (display) + Tajawal (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           1. CORE VARIABLES & RESET
+           ========================================= */
+        :root {
+            /* Surfaces */
+            --bg-page: #F3F6FB;
+            --bg-page-alt: #EAF0F8;
+            --bg-surface: #FFFFFF;
+            --border-soft: #E3E9F2;
+
+            /* Text */
+            --text-main: #142033;
+            --text-muted: #5C6B85;
+            --text-on-dark: #FFFFFF;
+
+            /* Brand */
+            --primary: #0070D1;
+            --primary-dark: #00509E;
+            --primary-tint: #E7F1FC;
+            --accent: #00A876;       /* emerald - price / success */
+            --accent-warm: #FF6A3D;  /* single warm accessory - VIP / highlights */
+            --error: #E5484D;
+
+            --font-display: 'Cairo', sans-serif;
+            --font-body: 'Tajawal', sans-serif;
+            --transition: all 0.25s ease;
+
+            --shadow-sm: 0 2px 10px rgba(20, 32, 51, 0.06);
+            --shadow-md: 0 10px 30px rgba(20, 32, 51, 0.10);
+            --shadow-lg: 0 20px 50px rgba(20, 32, 51, 0.14);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        img { max-width: 100%; display: block; }
+        h1, h2, h3 { font-family: var(--font-display); }
+
+        /* =========================================
+           2. UTILITIES & ANIMATIONS
+           ========================================= */
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+        .section-padding { padding: 90px 0; }
+        .text-center { text-align: center; }
+        .text-primary { color: var(--primary); }
+        .text-accent { color: var(--accent); }
+
+        .eyebrow {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--primary);
+            background: var(--primary-tint);
+            padding: 6px 16px;
+            border-radius: 50px;
+            margin-bottom: 14px;
+        }
+
+        .section-head { max-width: 560px; margin: 0 auto 20px; }
+        .section-head p { color: var(--text-muted); margin-top: 8px; }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            font-family: var(--font-display);
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 8px 20px rgba(0, 112, 209, 0.28);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(0, 112, 209, 0.36); background: var(--primary-dark); }
+
+        .btn-outline {
+            background: var(--bg-surface);
+            border: 2px solid var(--border-soft);
+            color: var(--text-main);
+        }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+        .btn-ghost-light {
+            background: rgba(255,255,255,0.14);
+            border: 1.5px solid rgba(255,255,255,0.5);
+            color: white;
+            backdrop-filter: blur(4px);
+        }
+        .btn-ghost-light:hover { background: rgba(255,255,255,0.24); }
+
+        .icon-badge {
+            width: 58px; height: 58px;
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(145deg, var(--primary-tint), #DCEAFB);
+            color: var(--primary);
+            margin: 0 auto 18px;
+        }
+        .icon-badge svg { width: 26px; height: 26px; }
+
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible { opacity: 1; transform: none; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .fade-in-section { transition: none; }
+            html { scroll-behavior: auto; }
+        }
+
+        /* =========================================
+           3. HEADER & NAV
+           ========================================= */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-soft);
+            padding: 14px 0;
+        }
+
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+
+        .logo {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 1.4rem; font-weight: 900; color: var(--text-main);
+            font-family: var(--font-display);
+        }
+        .logo svg { width: 36px; height: 36px; fill: var(--primary); }
+
+        /* =========================================
+           4. HERO SECTION
+           ========================================= */
+        .hero {
+            position: relative;
+            min-height: 92vh;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            padding-top: 90px;
+            background:
+                radial-gradient(circle at 18% 22%, rgba(0, 112, 209, 0.55), transparent 42%),
+                radial-gradient(circle at 82% 18%, rgba(0, 168, 118, 0.4), transparent 40%),
+                radial-gradient(circle at 50% 90%, rgba(0, 80, 158, 0.55), transparent 55%),
+                linear-gradient(160deg, #0B1E3B 0%, #0E2C55 55%, #0B1E3B 100%);
+        }
+
+        .hero-bg {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0.9;
+        }
+        .hero-bg svg { width: 100%; height: 100%; }
+
+        .hero::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(11, 20, 38, 0.92) 5%, rgba(11, 20, 38, 0.45) 55%, rgba(11, 20, 38, 0.35) 100%);
+        }
+
+        .hero-content { position: relative; z-index: 1; color: white; }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.35);
+            padding: 8px 18px; border-radius: 50px;
+            font-size: 0.85rem; font-weight: 500;
+            backdrop-filter: blur(6px);
+            margin-bottom: 22px;
+        }
+        .hero-badge span.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
+
+        .hero-content h1 {
+            font-size: 3.6rem;
+            font-weight: 900;
+            margin-bottom: 14px;
+            text-shadow: 0 4px 24px rgba(0,0,0,0.35);
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 34px;
+            max-width: 560px;
+            margin-left: auto; margin-right: auto;
+        }
+
+        .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.4rem; }
+            .hero-content p { font-size: 1.05rem; }
+        }
+
+        /* =========================================
+           5. ABOUT & FEATURES
+           ========================================= */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: var(--bg-surface);
+            padding: 34px 26px;
+            border-radius: 18px;
+            text-align: center;
+            border: 1px solid var(--border-soft);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .feature-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+        .feature-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+        .feature-card p { color: var(--text-muted); font-size: 0.92rem; }
+
+        /* =========================================
+           6. ROOMS SECTION
+           ========================================= */
+        .rooms-section { background: var(--bg-page-alt); }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+            margin-top: 50px;
+        }
+
+        .room-card {
+            background: var(--bg-surface);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-soft);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            display: flex; flex-direction: column;
+            position: relative;
+        }
+        .room-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+
+        .room-card.vip { border: 1.5px solid rgba(255, 106, 61, 0.4); }
+
+        .room-badge {
+            position: absolute; top: 16px; left: 16px; z-index: 2;
+            background: var(--accent-warm);
+            color: white;
+            font-family: var(--font-display);
+            font-size: 0.75rem; font-weight: 800;
+            padding: 5px 14px; border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(255, 106, 61, 0.4);
+        }
+
+        .room-img-wrapper { height: 210px; overflow: hidden; position: relative; background: var(--bg-page-alt); }
+        .room-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .room-card:hover .room-img-wrapper img { transform: scale(1.08); }
+
+        .room-img-wrapper::after {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .room-details { padding: 26px; flex-grow: 1; display: flex; flex-direction: column; }
+        .room-title { font-size: 1.4rem; margin-bottom: 10px; color: var(--text-main); }
+        .room-desc { color: var(--text-muted); margin-bottom: 18px; font-size: 0.95rem; }
+
+        .room-price {
+            font-size: 1.15rem; font-weight: 800; color: var(--accent);
+            margin-bottom: 18px; display: block; font-family: var(--font-display);
+        }
+
+        .room-features { margin-bottom: 22px; font-size: 0.9rem; color: var(--text-muted); }
+        .room-features li { margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .room-features svg { width: 16px; height: 16px; color: var(--primary); flex-shrink: 0; }
+
+        /* =========================================
+           7. GALLERY
+           ========================================= */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 44px;
+        }
+        .gallery-item { border-radius: 16px; overflow: hidden; height: 250px; box-shadow: var(--shadow-sm); }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+        .gallery-item:hover img { transform: scale(1.06); }
+
+        /* =========================================
+           8. BOOKING FORM
+           ========================================= */
+        .booking-section { background: var(--bg-page-alt); position: relative; }
+
+        .form-container {
+            background: var(--bg-surface);
+            padding: 44px;
+            border-radius: 22px;
+            max-width: 700px;
+            margin: 0 auto;
+            border: 1px solid var(--border-soft);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .form-group { margin-bottom: 25px; }
+        .form-label { display: block; margin-bottom: 10px; font-weight: 700; color: var(--text-main); }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-page);
+            border: 1.5px solid var(--border-soft);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-tint); background: var(--bg-surface); }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230070d1%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: left 16px top 50%;
+            background-size: 12px auto;
+            padding-left: 40px;
+        }
+
+        .radio-group { display: flex; gap: 14px; flex-wrap: wrap; }
+        .radio-option { flex: 1; min-width: 140px; }
+        .radio-option input { display: none; }
+
+        .radio-option label {
+            display: block;
+            padding: 15px;
+            background: var(--bg-page);
+            border: 1.5px solid var(--border-soft);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+        .radio-option input:checked + label {
+            border-color: var(--primary);
+            background: var(--primary-tint);
+            color: var(--primary);
+        }
+
+        .hidden { display: none; }
+
+        .ps4-selection {
+            margin-top: 15px; padding: 16px;
+            background: var(--primary-tint);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 112, 209, 0.25);
+        }
+
+        .warning-box {
+            background: #FFF3F1;
+            border: 1px solid rgba(229, 72, 77, 0.35);
+            color: #B3252B;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            display: flex; align-items: start; gap: 10px;
+        }
+
+        .price-summary {
+            background: linear-gradient(135deg, #E6F8F1, #F0FBF6);
+            border: 1px solid rgba(0, 168, 118, 0.3);
+            padding: 22px;
+            border-radius: 14px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .price-summary > div:first-child { color: var(--text-muted); font-weight: 500; }
+        .total-price-display { font-size: 2.1rem; font-weight: 900; color: var(--accent); margin-top: 8px; font-family: var(--font-display); }
+
+        /* Modal */
+        .modal {
+            position: fixed; inset: 0;
+            background: rgba(14, 22, 40, 0.55);
+            backdrop-filter: blur(3px);
+            z-index: 2000;
+            display: none; justify-content: center; align-items: center;
+            padding: 20px;
+        }
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: var(--bg-surface);
+            padding: 32px;
+            border-radius: 22px;
+            max-width: 500px; width: 100%;
+            text-align: center;
+            border: 1px solid var(--border-soft);
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .summary-row {
+            display: flex; justify-content: space-between;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-soft);
+            padding-bottom: 10px;
+        }
+        .summary-row:last-child { border-bottom: none; }
+        .summary-label { color: var(--text-muted); }
+        .summary-value { font-weight: 700; color: var(--text-main); }
+
+        /* =========================================
+           9. FOOTER
+           ========================================= */
+        footer { background: #0E1B33; color: rgba(255,255,255,0.85); padding: 56px 0 24px; }
+        footer .logo { color: white; }
+        footer .logo svg { fill: var(--primary); }
+
+        .footer-content { display: flex; flex-direction: column; align-items: center; gap: 18px; margin-bottom: 30px; text-align: center; }
+        .footer-content p { color: rgba(255,255,255,0.6); max-width: 420px; }
+
+        .social-links { display: flex; gap: 16px; }
+        .social-icon {
+            width: 42px; height: 42px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: var(--transition);
+            color: white;
+        }
+        .social-icon:hover { background: var(--primary); transform: translateY(-3px); }
+
+        .copyright {
+            text-align: center; color: rgba(255,255,255,0.4);
+            font-size: 0.85rem; padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .spinner {
+            border: 4px solid rgba(0,0,0,0.08);
+            width: 36px; height: 36px; border-radius: 50%;
+            border-left-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        :focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <svg viewBox="0 0 24 24">
+                    <path d="M17.5 6h-11C4.6 6 3 7.6 3 9.5v5c0 1.66 1.34 3 3 3 .89 0 1.69-.39 2.24-1L10 14.5h4l1.76 2c.55.61 1.35 1 2.24 1 1.66 0 3-1.34 3-3v-5C21 7.6 19.4 6 17.5 6zM9 12H7.5V13.5H6V12H4.5v-1.5H6V9h1.5v1.5H9V12zm5.5-1c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm2.5 2c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
+                </svg>
+                الرايق
+            </div>
+            <a href="#booking" class="btn btn-primary" style="padding: 10px 22px; font-size: 0.9rem;">احجز دلوقتي</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg">
+            <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#25507f"/>
+                        <stop offset="45%" stop-color="#0d2748"/>
+                        <stop offset="100%" stop-color="#081a30"/>
+                    </linearGradient>
+                    <linearGradient id="bodyHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#5CA8F0" stop-opacity="0.85"/>
+                        <stop offset="100%" stop-color="#0d2748" stop-opacity="0"/>
+                    </linearGradient>
+                    <radialGradient id="btnTriangle" cx="35%" cy="30%" r="80%">
+                        <stop offset="0%" stop-color="#6FF0C6"/>
+                        <stop offset="100%" stop-color="#00A876"/>
+                    </radialGradient>
+                    <radialGradient id="btnCircle" cx="35%" cy="30%" r="80%">
+                        <stop offset="0%" stop-color="#FFAF93"/>
+                        <stop offset="100%" stop-color="#FF6A3D"/>
+                    </radialGradient>
+                    <radialGradient id="btnCross" cx="35%" cy="30%" r="80%">
+                        <stop offset="0%" stop-color="#8FCBFF"/>
+                        <stop offset="100%" stop-color="#0070D1"/>
+                    </radialGradient>
+                    <radialGradient id="btnSquare" cx="35%" cy="30%" r="80%">
+                        <stop offset="0%" stop-color="#E3D6FF"/>
+                        <stop offset="100%" stop-color="#9B7BE0"/>
+                    </radialGradient>
+                    <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+                        <feGaussianBlur stdDeviation="9" result="blur"/>
+                        <feMerge>
+                            <feMergeNode in="blur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                <!-- Floating geometric shapes for depth -->
+                <g opacity="0.55">
+                    <polygon points="150,110 182,168 118,168" fill="url(#btnTriangle)" filter="url(#softGlow)" transform="rotate(-14 150 150)"/>
+                    <circle cx="1045" cy="140" r="30" fill="url(#btnCircle)" filter="url(#softGlow)"/>
+                    <rect x="975" y="470" width="54" height="54" rx="10" fill="url(#btnSquare)" filter="url(#softGlow)" transform="rotate(20 1002 497)"/>
+                    <g transform="translate(115,555) rotate(12)" filter="url(#softGlow)">
+                        <line x1="-20" y1="-20" x2="20" y2="20" stroke="url(#btnCross)" stroke-width="10" stroke-linecap="round"/>
+                        <line x1="20" y1="-20" x2="-20" y2="20" stroke="url(#btnCross)" stroke-width="10" stroke-linecap="round"/>
+                    </g>
+                    <polygon points="1095,645 1130,705 1060,705" fill="url(#btnTriangle)" opacity="0.6" transform="rotate(16 1095 675)"/>
+                    <circle cx="240" cy="640" r="17" fill="url(#btnCircle)" opacity="0.55"/>
+                    <rect x="590" y="80" width="32" height="32" rx="7" fill="url(#btnSquare)" opacity="0.55" transform="rotate(-22 606 96)"/>
+                    <circle cx="900" cy="690" r="14" fill="url(#btnCross)" opacity="0.45"/>
+                </g>
+
+                <!-- Stylized 3D controller -->
+                <g transform="translate(300,250)">
+                    <!-- left grip -->
+                    <path d="M40 180 C -42 182 -62 322 8 362 C 58 400 120 342 142 282 L 182 182 Z" fill="url(#bodyGrad)"/>
+                    <path d="M40 180 C -20 181 -45 250 -30 300 C -10 260 20 220 60 195 Z" fill="url(#bodyHighlight)" opacity="0.6"/>
+
+                    <!-- right grip -->
+                    <path d="M560 180 C 642 182 662 322 612 362 C 562 400 500 342 478 282 L 438 182 Z" fill="url(#bodyGrad)"/>
+
+                    <!-- body -->
+                    <path d="M120 88 C 220 38 380 38 480 88 C 562 128 562 220 480 242 C 380 267 220 267 120 242 C 38 220 38 128 120 88 Z" fill="url(#bodyGrad)"/>
+                    <path d="M120 88 C 220 38 380 38 480 88 C 502 99 514 114 520 131 C 420 89 180 89 80 131 C 86 114 98 99 120 88 Z" fill="url(#bodyHighlight)"/>
+
+                    <!-- d-pad -->
+                    <g transform="translate(158,150)">
+                        <rect x="-8" y="-27" width="16" height="54" rx="4" fill="#08172d"/>
+                        <rect x="-27" y="-8" width="54" height="16" rx="4" fill="#08172d"/>
+                    </g>
+
+                    <!-- analog sticks -->
+                    <circle cx="228" cy="202" r="27" fill="#08172d"/>
+                    <circle cx="228" cy="202" r="18" fill="#16335c"/>
+                    <circle cx="372" cy="202" r="27" fill="#08172d"/>
+                    <circle cx="372" cy="202" r="18" fill="#16335c"/>
+
+                    <!-- face buttons cluster -->
+                    <g transform="translate(442,150)">
+                        <polygon points="0,-24 21,12 -21,12" fill="url(#btnTriangle)" transform="translate(0,-28)"/>
+                        <circle cx="28" cy="0" r="13" fill="url(#btnCircle)"/>
+                        <g transform="translate(0,28)">
+                            <line x1="-9" y1="-9" x2="9" y2="9" stroke="url(#btnCross)" stroke-width="4.5" stroke-linecap="round"/>
+                            <line x1="9" y1="-9" x2="-9" y2="9" stroke="url(#btnCross)" stroke-width="4.5" stroke-linecap="round"/>
+                        </g>
+                        <rect x="-13" y="-13" width="26" height="26" rx="6" fill="url(#btnSquare)" transform="translate(-28,0)"/>
+                    </g>
+                </g>
+            </svg>
+        </div>
+        <div class="container hero-content fade-in-section">
+            <div class="hero-badge"><span class="dot"></span> يوميًا من 12 ظهرًا حتى 2 صباحًا</div>
+            <h1>الرايق</h1>
+            <p>أفضل أجواء اللعب.. غرف خاصة، بلايستيشن 4، وراحة تامة</p>
+            <div class="hero-ctas">
+                <a href="#booking" class="btn btn-primary">احجز غرفتك الآن</a>
+                <a href="#rooms" class="btn btn-ghost-light">شوف الغرف</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About & Features -->
+    <section class="section-padding container fade-in-section">
+        <div class="section-head text-center">
+            <span class="eyebrow">ليه الرايق</span>
+            <h2 style="font-size: 2rem;">تجربة لعب مختلفة تمامًا</h2>
+            <p>كل التفاصيل اللي محتاجها لجلسة لعب مريحة، من غير أي تعقيد</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="10" rx="5"/>
+                        <line x1="6" y1="9.5" x2="6" y2="14.5"/>
+                        <line x1="3.5" y1="12" x2="8.5" y2="12"/>
+                        <circle cx="15" cy="10.5" r="1"/>
+                        <circle cx="17.5" cy="13" r="1"/>
+                    </svg>
+                </div>
+                <h3>PS4 Pro</h3>
+                <p>أجهزة بلايستيشن 4 برو بأحدث الألعاب</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>
+                    </svg>
+                </div>
+                <h3>تكييف مركزي</h3>
+                <p>جو بارد ومريح طول الوقت</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <h3>غرف خاصة</h3>
+                <p>خصوصية تامة أنت وأصحابك</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+                        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                        <line x1="6" y1="1" x2="6" y2="4"/>
+                        <line x1="10" y1="1" x2="10" y2="4"/>
+                        <line x1="14" y1="1" x2="14" y2="4"/>
+                    </svg>
+                </div>
+                <h3>مشروبات وسناكس</h3>
+                <p>قائمة متنوعة من المشروبات والإندومي</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rooms Section -->
+    <section id="rooms" class="section-padding rooms-section">
+        <div class="container fade-in-section">
+            <div class="section-head text-center">
+                <span class="eyebrow">الغرف</span>
+                <h2 style="font-size: 2rem;">اختار غرفتك</h2>
+                <p>ثلاث غرف بمساحات مختلفة تناسب أي عدد من الأصحاب</p>
+            </div>
+
+            <div class="rooms-grid">
+                <!-- Room 1 -->
+                <div class="room-card">
+                    <div class="room-img-wrapper">
+                        <img src="R.png" alt="غرفة 1">
+                    </div>
+                    <div class="room-details">
+                        <h3 class="room-title">غرفة 1</h3>
+                        <p class="room-desc">غرفة مريحة تحتوي على جهاز PS4 واحد. مثالية للعب الفردي أو الثنائي.</p>
+                        <ul class="room-features">
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> جهاز PlayStation 4 واحد</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> شاشة كبيرة</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> تكييف مستقل</li>
+                        </ul>
+                        <span class="room-price">يبدأ من 40 جنيه/ساعة</span>
+                        <a href="#booking" class="btn btn-outline" onclick="selectRoomFromCard('room1')">احجز الآن</a>
+                    </div>
+                </div>
+
+                <!-- Room 2 -->
+                <div class="room-card">
+                    <div class="room-img-wrapper">
+                        <img src="R.png" alt="غرفة 2">
+                    </div>
+                    <div class="room-details">
+                        <h3 class="room-title">غرفة 2</h3>
+                        <p class="room-desc">غرفة واسعة تحتوي على جهاز PS4 واحد. جو هادئ ومنعزل.</p>
+                        <ul class="room-features">
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> جهاز PlayStation 4 واحد</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> أريكة مريحة</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> إضاءة خافتة</li>
+                        </ul>
+                        <span class="room-price">يبدأ من 40 جنيه/ساعة</span>
+                        <a href="#booking" class="btn btn-outline" onclick="selectRoomFromCard('room2')">احجز الآن</a>
+                    </div>
+                </div>
+
+                <!-- Room 3 -->
+                <div class="room-card vip">
+                    <span class="room-badge">VIP</span>
+                    <div class="room-img-wrapper">
+                        <img src="R.png" alt="غرفة 3">
+                    </div>
+                    <div class="room-details">
+                        <h3 class="room-title">غرفة 3 (VIP)</h3>
+                        <p class="room-desc">غرفة كبيرة تحتوي على جهازين PS4. مناسبة للمجموعات الكبيرة أو التورنامنتات.</p>
+                        <ul class="room-features">
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> جهازان PlayStation 4</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> مساحة واسعة لـ 4 لاعبين أو أكثر</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> إمكانية حجز الجهازين معًا</li>
+                        </ul>
+                        <span class="room-price">يبدأ من 40 جنيه/ساعة</span>
+                        <a href="#booking" class="btn btn-outline" onclick="selectRoomFromCard('room3')">احجز الآن</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="section-padding container fade-in-section">
+        <div class="section-head text-center">
+            <span class="eyebrow">المكان</span>
+            <h2 style="font-size: 2rem;"> عن المكان</h2>
+            <p> خدلك لفه في المكان</p>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item"><img src="R.png" alt="صورة الكافيه 1"></div>
+            <div class="gallery-item"><img src="R.png" alt="صورة الكافيه 2"></div>
+            <div class="gallery-item"><img src="R.png" alt="صورة الكافيه 3"></div>
+            <div class="gallery-item"><img src="R.png" alt="صورة الكافيه 4"></div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section id="booking" class="section-padding booking-section">
+        <div class="container fade-in-section">
+            <div class="section-head text-center" style="margin-bottom: 40px;">
+                <span class="eyebrow">الحجز</span>
+                <h2 style="font-size: 2rem;">احجز دلوقتي</h2>
+                <p>املأ البيانات واحجز مكانك في ثواني</p>
+            </div>
+
+            <div class="form-container">
+                <form id="bookingForm">
+
+                    <!-- Room Selection -->
+                    <div class="form-group">
+                        <label class="form-label">اختر الغرفة</label>
+                        <select id="room" class="form-control" required onchange="handleRoomChange()">
+                            <option value="" disabled selected>-- اختر الغرفة --</option>
+                            <option value="room1">غرفة 1 (جهاز واحد)</option>
+                            <option value="room2">غرفة 2 (جهاز واحد)</option>
+                            <option value="room3">غرفة 3 (جهازين)</option>
+                        </select>
+                    </div>
+
+                    <!-- PS4 Selection (Hidden by default, shown for Room 3) -->
+                    <div id="ps4SelectionGroup" class="form-group hidden">
+                        <label class="form-label">اختر الجهاز المطلوب في غرفة 3</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" name="ps4_unit" id="ps4_1" value="PS4 #1" checked onchange="updateAvailabilityUI()">
+                                <label for="ps4_1">جهاز 1</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" name="ps4_unit" id="ps4_2" value="PS4 #2" onchange="updateAvailabilityUI()">
+                                <label for="ps4_2">جهاز 2</label>
+                            </div>
+                          
+                        </div>
+                    </div>
+
+                    <!-- Date & Time -->
+                    <div class="form-group">
+                        <label class="form-label">تاريخ الحجز</label>
+                        <input type="date" id="date" class="form-control" required onchange="updateAvailabilityUI()">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">وقت البدء</label>
+                        <select id="startTime" class="form-control" required onchange="calculatePrice()">
+                            <option value="" disabled selected>-- اختر الوقت --</option>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">المدة (بالساعات)</label>
+                        <select id="duration" class="form-control" required onchange="calculatePrice()">
+                            <option value="1">1 ساعة</option>
+                            <option value="2">2 ساعة</option>
+                            <option value="3">3 ساعات</option>
+                            <option value="4">4 ساعات</option>
+                            <option value="5">5 ساعات</option>
+                            <option value="6">6 ساعات</option>
+                            <option value="8">8 ساعات (ليلة كاملة)</option>
+                        </select>
+                    </div>
+
+                    <!-- Playing Mode -->
+                    <div class="form-group">
+                        <label class="form-label">نوع اللعب</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" name="playMode" id="modeNormal" value="normal" checked onchange="calculatePrice()">
+                                <label for="modeNormal">🎮 عادي - 2 دراع</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" name="playMode" id="modeMulti" value="multiplayer" onchange="calculatePrice()">
+                                <label for="modeMulti">👥 مالتي - 4 دراعات</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price Display -->
+                    <div class="price-summary">
+                        <div>السعر الإجمالي المتوقع</div>
+                        <div class="total-price-display" id="totalPrice">0 جنيه</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">* السعر النهائي يتم تأكيده عند الوصول</div>
+                    </div>
+
+                    <!-- Customer Info -->
+                    <div class="form-group" style="margin-top: 25px;">
+                        <label class="form-label">الاسم بالكامل</label>
+                        <input type="text" id="customerName" class="form-control" placeholder="اكتب اسمك هنا" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">رقم الهاتف (مصري)</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="01xxxxxxxxx" pattern="[0-9]{11}" required>
+                        <small style="color: var(--text-muted); font-size: 0.8rem;">يجب أن يكون الرقم 11 خانة ويبدأ بـ 01</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">ملاحظات (اختياري)</label>
+                        <textarea id="notes" class="form-control" rows="3" placeholder="أي حاجة تحب تقولها..."></textarea>
+                    </div>
+
+                    <!-- Warning -->
+                    <div class="warning-box">
+                        <span>⚠️</span>
+                        <div>
+                            <strong>تنبيه هام:</strong><br>
+                            في حالة التأخر عن موعد الحجز لأكثر من 15 دقيقة، يعتبر الحجز لاغيًا وقد يتم إعطاء الغرفة لعميل آخر.
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px;" id="submitBtn">
+                        تأكيد وحجز الآن
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">
+                    <svg viewBox="0 0 24 24" style="width: 30px; height: 30px;">
+                        <path d="M17.5 6h-11C4.6 6 3 7.6 3 9.5v5c0 1.66 1.34 3 3 3 .89 0 1.69-.39 2.24-1L10 14.5h4l1.76 2c.55.61 1.35 1 2.24 1 1.66 0 3-1.34 3-3v-5C21 7.6 19.4 6 17.5 6zM9 12H7.5V13.5H6V12H4.5v-1.5H6V9h1.5v1.5H9V12zm5.5-1c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm2.5 2c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
+                    </svg>
+                    الرايق
+                </div>
+                <p>وجهتك الأولى للعب الهادئ والممتع. غرف خاصة، أجهزة PS4، وأجواء مميزة.</p>
+                <div style="color: var(--accent); font-weight: 700;">يوميًا من 12 ظهرًا حتى 2 صباحًا</div>
+
+                <div class="social-links">
+                    <a href="XXXXX_FACEBOOK_PAGE_URLXXXXX" target="_blank" class="social-icon" title="Facebook">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                    <a href="XXXXX_WHATSAPP_URLXXXXX" target="_blank" class="social-icon" title="WhatsApp">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                    </a>
+                    <a href="tel:XXXXX_PHONE_NUMBERXXXXX" class="social-icon" title="Call Us">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                    </a>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 الرايق. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <h3 style="color: var(--primary); margin-bottom: 20px; font-size: 1.5rem;">مراجعة الحجز</h3>
+            <div id="modalSummary" style="text-align: right; margin-bottom: 20px;">
+                <!-- Summary injected via JS -->
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button type="button" class="btn btn-outline" onclick="closeModal()">تعديل</button>
+                <button type="button" class="btn btn-primary" onclick="submitFinalBooking()">تأكيد نهائي</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div style="font-size: 3rem; margin-bottom: 10px;">✅</div>
+            <h3 style="color: var(--accent); margin-bottom: 10px;">تم إرسال الحجز بنجاح</h3>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">
+                تم استلام طلبك وسيتم مراجعته من قبل الإدارة.<br>
+                سيتم التواصل معك لتأكيد الحجز.
+            </p>
+            <div style="background: var(--bg-page-alt); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                <div style="font-size: 0.9rem; color: var(--text-muted);">رقم الحجز المرجعي</div>
+                <div id="reservationIdDisplay" style="font-size: 1.5rem; font-weight: 900; color: var(--primary); letter-spacing: 2px; font-family: var(--font-display);"></div>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                ⚠️ احتفظ برقم الحجز للتواصل مع المكان.<br>
+                يرجى الوصول قبل الموعد بـ 15 دقيقة.
+            </p>
+            <button type="button" class="btn btn-primary" style="margin-top: 20px;" onclick="location.reload()">حجز آخر</button>
+        </div>
+    </div>
+
+    <!-- CONFIGURATION & LOGIC -->
+    <script>
+        // ==================================================
+        // 1. CONFIGURATION
+        // ==================================================
+        const CONFIG = {
+            GOOGLE_APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwM7EkfMaGAaKhyCFEnGyTNetCIrevWRs-DUdmTeTXLsgeuc7hg0mVSaf0MlZv1-gkniw/exec",
+            FACEBOOK_URL: "https://www.facebook.com/share/14oqDRZhRvK/",
+            WHATSAPP_URL: "https://wa.me/201034787639",
+            PHONE_NUMBER: "01034787639",
+
+            // Pricing Config
+            NORMAL_PRICE_PER_HOUR: 40,
+            MULTIPLAYER_PRICE_PER_HOUR: 60,
+
+            // Booking Rules
+            MAX_BOOKING_DAYS: 14,
+            OPEN_HOUR: 12, // 12 PM
+            CLOSE_HOUR: 26 // 2 AM next day (24+2)
+        };
+
+        // Cache for availability data to avoid excessive fetches
+        let availabilityCache = {};
+
+        // ==================================================
+        // 2. INITIALIZATION
+        // ==================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            initDatePickers();
+            initTimePickers();
+            initScrollAnimations();
+            
+            // Initial availability check
+            updateAvailabilityUI();
+        });
+
+        function initDatePickers() {
+            const dateInput = document.getElementById('date');
+            const today = new Date();
+            const maxDate = new Date();
+            maxDate.setDate(today.getDate() + CONFIG.MAX_BOOKING_DAYS);
+
+            const formatDate = (date) => date.toISOString().split('T')[0];
+
+            dateInput.min = formatDate(today);
+            dateInput.max = formatDate(maxDate);
+            dateInput.value = formatDate(today);
+        }
+
+        function initTimePickers() {
+            const timeSelect = document.getElementById('startTime');
+            while(timeSelect.options.length > 1) {
+                timeSelect.remove(1);
+            }
+
+            for (let i = CONFIG.OPEN_HOUR; i < CONFIG.CLOSE_HOUR; i++) {
+                const option = document.createElement('option');
+                let displayHour = i;
+                let ampm = 'م';
+
+                if (i >= 12 && i < 24) {
+                    if (i > 12) displayHour = i - 12;
+                    ampm = 'م';
+                } else if (i >= 24) {
+                    displayHour = i - 24;
+                    if (displayHour === 0) displayHour = 12;
+                    ampm = 'ص';
+                }
+
+                option.value = i;
+                option.text = `${displayHour}:00 ${ampm}`;
+                option.dataset.originalText = `${displayHour}:00 ${ampm}`;
+                timeSelect.appendChild(option);
+            }
+        }
+
+        function initScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in-section').forEach(section => {
+                observer.observe(section);
+            });
+        }
+
+        // ==================================================
+        // 3. FORM LOGIC
+        // ==================================================
+        function selectRoomFromCard(roomId) {
+            document.getElementById('room').value = roomId;
+            handleRoomChange();
+        }
+
+        function handleRoomChange() {
+            const room = document.getElementById('room').value;
+            const ps4Group = document.getElementById('ps4SelectionGroup');
+
+            if (room === 'room3') {
+                ps4Group.classList.remove('hidden');
+            } else {
+                ps4Group.classList.add('hidden');
+                document.querySelector('input[name="ps4_unit"][value="PS4 #1"]').checked = true;
+            }
+            calculatePrice();
+            updateAvailabilityUI();
+        }
+
+        function calculatePrice() {
+            const mode = document.querySelector('input[name="playMode"]:checked').value;
+            const duration = parseInt(document.getElementById('duration').value);
+
+            let pricePerHour = CONFIG.NORMAL_PRICE_PER_HOUR;
+            if (mode === 'multiplayer') {
+                pricePerHour = CONFIG.MULTIPLAYER_PRICE_PER_HOUR;
+            }
+
+            const total = pricePerHour * duration;
+            document.getElementById('totalPrice').textContent = `${total} جنيه`;
+            return total;
+        }
+
+        function validatePhone(phone) {
+            const regex = /^01[0125][0-9]{8}$/;
+            return regex.test(phone);
+        }
+
+        const modal = document.getElementById('confirmationModal');
+        let formDataCache = {};
+
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const phone = document.getElementById('phone').value;
+            if (!validatePhone(phone)) {
+                alert('من فضلك أدخل رقم هاتف مصري صحيح مكون من 11 رقم ويبدأ بـ 01');
+                return;
+            }
+
+            const roomSelect = document.getElementById('room');
+            const roomText = roomSelect.options[roomSelect.selectedIndex].text;
+
+            let ps4Text = "جهاز واحد";
+            if (roomSelect.value === 'room3') {
+                const ps4Radio = document.querySelector('input[name="ps4_unit"]:checked');
+                ps4Text = ps4Radio.nextElementSibling.textContent;
+            }
+
+            const modeRadio = document.querySelector('input[name="playMode"]:checked');
+            const modeText = modeRadio.nextElementSibling.textContent;
+
+            const startTimeVal = parseInt(document.getElementById('startTime').value);
+            const duration = parseInt(document.getElementById('duration').value);
+
+            let endHourVal = startTimeVal + duration;
+            let endTimeDisplay = "";
+
+            const formatTime = (h) => {
+                let display = h;
+                let ampm = 'م';
+                if (h >= 12 && h < 24) {
+                    if (h > 12) display = h - 12;
+                    ampm = 'م';
+                } else if (h >= 24) {
+                    display = h - 24;
+                    if (display === 0) display = 12;
+                    ampm = 'ص';
+                }
+                return `${display}:00 ${ampm}`;
+            };
+
+            endTimeDisplay = formatTime(endHourVal);
+
+            const totalPrice = calculatePrice();
+
+            formDataCache = {
+                room: roomSelect.value,
+                roomText: roomText,
+                ps4: ps4Text,
+                date: document.getElementById('date').value,
+                startTime: document.getElementById('startTime').options[document.getElementById('startTime').selectedIndex].dataset.originalText,
+                duration: duration,
+                endTime: endTimeDisplay,
+                mode: modeText,
+                price: totalPrice,
+                name: document.getElementById('customerName').value,
+                phone: phone,
+                notes: document.getElementById('notes').value
+            };
+
+            const summaryHtml = `
+                <div class="summary-row"><span class="summary-label">الغرفة:</span><span class="summary-value">${formDataCache.roomText}</span></div>
+                <div class="summary-row"><span class="summary-label">الجهاز:</span><span class="summary-value">${formDataCache.ps4}</span></div>
+                <div class="summary-row"><span class="summary-label">التاريخ:</span><span class="summary-value">${formDataCache.date}</span></div>
+                <div class="summary-row"><span class="summary-label">الوقت:</span><span class="summary-value">${formDataCache.startTime} - ${formDataCache.endTime}</span></div>
+                <div class="summary-row"><span class="summary-label">النوع:</span><span class="summary-value">${formDataCache.mode}</span></div>
+                <div class="summary-row"><span class="summary-label">الإجمالي:</span><span class="summary-value" style="color:var(--accent)">${formDataCache.price} جنيه</span></div>
+                <div class="summary-row"><span class="summary-label">الاسم:</span><span class="summary-value">${formDataCache.name}</span></div>
+                <div class="summary-row"><span class="summary-label">الهاتف:</span><span class="summary-value">${formDataCache.phone}</span></div>
+            `;
+
+            document.getElementById('modalSummary').innerHTML = summaryHtml;
+            modal.classList.add('active');
+        });
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        // ==================================================
+        // AVAILABILITY UI UPDATER (FIXED FOR ROOM 3)
+        // ==================================================
+        async function updateAvailabilityUI() {
+            const room = document.getElementById('room').value;
+            const date = document.getElementById('date').value;
+            const timeSelect = document.getElementById('startTime');
+            
+            // Reset all options to original text first
+            Array.from(timeSelect.options).forEach(opt => {
+                if(opt.dataset.originalText) {
+                    opt.text = opt.dataset.originalText;
+                    opt.style.color = '';
+                    opt.style.fontWeight = '';
+                }
+            });
+
+            if (!room || !date) return;
+
+            let ps4Unit = '';
+            if (room === 'room3') {
+                const checkedRadio = document.querySelector('input[name="ps4_unit"]:checked');
+                // 🔧 الإصلاح هنا: استخدام textContent بدلاً من value للتطابق مع ما يتم حفظه في قاعدة البيانات
+                if (checkedRadio) {
+                    ps4Unit = checkedRadio.nextElementSibling.textContent; // "جهاز 1" أو "جهاز 2"
+                }
+            }
+
+            const cacheKey = `${room}_${date}_${ps4Unit}`;
+            
+            try {
+                let bookedSlots = [];
+                
+                if (availabilityCache[cacheKey]) {
+                    bookedSlots = availabilityCache[cacheKey];
+                } else {
+                    const params = new URLSearchParams({
+                        action: 'getBookedSlots', 
+                        room: room,
+                        date: date,
+                        ps4Unit: ps4Unit
+                    });
+                    
+                    const response = await fetch(CONFIG.GOOGLE_APPS_SCRIPT_URL + '?' + params.toString());
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success && Array.isArray(data.slots)) {
+                            bookedSlots = data.slots;
+                            availabilityCache[cacheKey] = bookedSlots;
+                        }
+                    }
+                }
+
+                if (bookedSlots.length > 0) {
+                    Array.from(timeSelect.options).forEach(opt => {
+                        if (opt.value && bookedSlots.includes(parseInt(opt.value))) {
+                            opt.text = `🔴 ${opt.dataset.originalText} — هذا الموعد محجوز بالفعل`;
+                            opt.style.color = '#E5484D';
+                            opt.style.fontWeight = '700';
+                        }
+                    });
+                }
+
+            } catch (err) {
+                console.warn("Could not fetch availability for UI update:", err);
+            }
+        }
+
+        // ==================================================
+        // CHECK AVAILABILITY BEFORE BOOKING (EXISTING LOGIC PRESERVED)
+        // ==================================================
+        async function checkBookingAvailability(payload) {
+            const params = new URLSearchParams({
+                action: 'checkAvailability',
+                room: payload.room,
+                ps4Unit: payload.ps4Unit || '',
+                date: payload.date,
+                startTime: String(payload.startTime),
+                duration: String(payload.duration)
+            });
+
+            const checkUrl = CONFIG.GOOGLE_APPS_SCRIPT_URL + '?' + params.toString();
+
+            const response = await fetch(checkUrl, { method: 'GET' });
+
+            if (!response.ok) {
+                throw new Error('تعذر الاتصال بالسيرفر.');
+            }
+
+            return await response.json();
+        }
+
+        // ==================================================
+        // SEND BOOKING (EXISTING LOGIC PRESERVED)
+        // ==================================================
+        async function sendBooking(payload, btn, originalText) {
+            try {
+                btn.textContent = 'جاري التحقق من الموعد...';
+                btn.disabled = true;
+
+                const availability = await checkBookingAvailability(payload);
+
+                if (!availability.success || !availability.available) {
+                    alert(availability.message || 'عذراً، هذا الموعد محجوز بالفعل. يرجى اختيار موعد آخر.');
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                    delete availabilityCache[`${payload.room}_${payload.date}_${payload.ps4Unit || ''}`];
+                    updateAvailabilityUI();
+                    return;
+                }
+
+                btn.textContent = 'جاري تأكيد الحجز...';
+
+                await fetch(CONFIG.GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                btn.textContent = 'جاري تأكيد الحجز...';
+
+                let reservationFound = false;
+
+                for (let attempt = 0; attempt < 6; attempt++) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    const verifyUrl = CONFIG.GOOGLE_APPS_SCRIPT_URL + '?' + new URLSearchParams({
+                        action: 'checkReservation',
+                        reservationId: payload.reservationId
+                    }).toString();
+
+                    const verifyResponse = await fetch(verifyUrl);
+
+                    if (!verifyResponse.ok) continue;
+
+                    const verifyData = await verifyResponse.json();
+
+                    if (verifyData.success && verifyData.found) {
+                        reservationFound = true;
+                        break;
+                    }
+                }
+
+                if (reservationFound) {
+                    modal.classList.remove('active');
+                    document.getElementById('successModal').classList.add('active');
+                    document.getElementById('reservationIdDisplay').textContent = payload.reservationId;
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                    availabilityCache = {};
+                    return;
+                }
+
+                alert('تعذر تأكيد الحجز. يرجى المحاولة مرة أخرى.');
+                btn.textContent = originalText;
+                btn.disabled = false;
+
+            } catch (error) {
+                console.error('Booking Error:', error);
+                alert('حدث خطأ أثناء إرسال الحجز. يرجى المحاولة مرة أخرى.');
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function submitFinalBooking() {
+            const btn = document.querySelector('#confirmationModal .btn-primary');
+            const originalText = btn.textContent;
+            btn.textContent = "جاري الإرسال...";
+            btn.disabled = true;
+
+            // 🔧 الإصلاح هنا: الحصول على القيمة الصحيحة من الـ radio button
+            const ps4Radio = document.querySelector('input[name="ps4_unit"]:checked');
+            const ps4UnitValue = ps4Radio ? ps4Radio.nextElementSibling.textContent : '';
+
+            const payload = {
+                reservationId: 'RES-' + Math.floor(Math.random() * 100000),
+                room: formDataCache.room,
+                ps4Unit: ps4UnitValue, // استخدم القيمة المنسقة بشكل صحيح
+                playMode: formDataCache.mode.includes('مالتي') ? 'multiplayer' : 'normal',
+                date: formDataCache.date,
+                startTime: parseInt(document.getElementById('startTime').value),
+                duration: parseInt(formDataCache.duration),
+                name: formDataCache.name,
+                phone: formDataCache.phone,
+                notes: formDataCache.notes || ''
+            };
+
+            sendBooking(payload, btn, originalText);
+        }
+    </script>
+</body>
+</html>
